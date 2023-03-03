@@ -1,0 +1,1 @@
+from fireDetect.models import *

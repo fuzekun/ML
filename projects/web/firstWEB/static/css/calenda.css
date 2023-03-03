@@ -1,0 +1,51 @@
+
+.clear:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.left {
+    float: left;
+}
+
+ul {
+    padding: 0px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+ul > li {
+    float: left;
+    list-style: none;
+    width: 30px;
+    height: 21px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.gray {
+    color: #766565;
+}
+
+.top {
+    height: 25px;
+}
+
+.top .lf-tri {
+    border: 10px solid transparent;
+    border-right-color: black;
+    margin-top: 4px;
+}
+
+.top .rf-tri {
+    border: 10px solid transparent;
+    border-left-color: black;
+    margin-top: 4px;
+}
+
+.top .content {
+    width: 185px;
+    height: 5px;
+    text-align: center;
+}

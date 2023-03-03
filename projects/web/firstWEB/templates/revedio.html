@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视频回放页面</title>
+</head>
+<body>
+    <video width="320" height="240" controls="controls" autoplay="autoplay">
+        <source src="{% static 'vedio/movie.ogv' %}" type="video/ogg" />
+    </video>
+</body>
+</html>

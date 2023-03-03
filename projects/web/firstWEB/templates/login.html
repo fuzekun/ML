@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'adminlte/dist/css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition login-page" background="{% static  'img/img.png' %}">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#"><b>视频监控</b></a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">开启您的旅程</p>
+
+      <form action="#" method="post">
+          {% csrf_token %}
+          <!--使用script提交的用户名和密码-->
+          <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="username" name="username">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                <span class="username-error" style="color:#b14442"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="Password" name="password">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                <span class="password-error" style="color:#b14442"></span>
+            </div>
+
+         <!--验证码模块-->
+         <div class="row">
+            <div class="col-sm-7">
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" placeholder="验证码" name="authcode">
+                    <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
+                </div>
+            </div>
+         </div>
+          <div class="col-sm-4">
+              <img id="authImg" src="{% url 'get_auth_img' %}" alt="验证码">
+          </div>
+          <!--验证码模块终-->
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                记住我
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+             <button type="button" id="loginBtn" class="btn btn-primary btn-block btn-flat">登录</button>
+          </div>
+          <!-- /.col -->
+        </div>
+
+      </form>
+
+      <div class="social-auth-links text-center mb-3">
+          <p id="errorMsg"> - OR - <p>
+        <a href="#" class="btn btn-block btn-primary">
+           使用微信登录
+        </a>
+        <a href="{% url 'getImgh' %}" class="btn btn-block btn-danger">
+          刷脸登录
+        </a>
+      </div>
+      <!-- /.social-auth-links -->
+
+      <p class="mb-1">
+        <a href="#">忘记密码</a>
+      </p>
+      <p class="mb-0">
+        <a href="register" class="text-center">注册账户</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %} "></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'adminlte/dist/js/adminlte.min.js' %}"></script>
+
+
+</body>
+</html>
+<script>
+    {#$(function () {#}
+    {#    $('input').iCheck({#}
+    {#        checkboxClass: 'icheckbox_square-blue',#}
+    {#        radioClass: 'iradio_square-blue',#}
+    {#        increaseArea: '20%' /* optional */#}
+    {#    });#}
+    {#    });#}
+
+    // 登录ajax请求
+    $("#loginBtn").on("click", function () {
+        var username = $("input[name=username]").val();
+        var password = $("input[name=password]").val();
+        var authcode = $("input[name=authcode]").val();
+        var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+        if (!username) {
+            alert("账号不能为空")
+        }
+        if (!password) {
+            alert("密码不能为空")
+        }
+        if (!authcode) {
+            alert("验证码不能为空")
+        }
+        $.ajax({
+            url: "{% url 'login' %}",
+            type: 'post',
+            data: {
+                username: username,
+                password: password,
+                authcode: authcode,
+                csrfmiddlewaretoken: csrf_token,
+            },
+            success: function (res) {
+                if (res.status === "1") {
+                    alert("验证码错误")
+                }
+                if (res.status === "2") {
+                    var href = location.search.slice(6);  //使用了auth的装饰器，会记录未登录用户想要访问的登录页面，登录成功后，会自动跳转过去
+                    if (href) {
+                        location.href = href  //登录成功，有目标地址
+                    } else {
+                        location.href = "{% url 'index' %}"  // 登录成功没有目标地址，跳转主页
+                    }
+                }
+                if (res.status === "3") {  // 帐号密码错误
+                    alert("账号或密码错误")
+                }
+            }
+        })
+    });
+
+    // 验证码刷新
+    $("#authImg").on("click", function () {
+        $("#authImg")[0].src += "?" // 点击事件刷新验证码图片
+    })
+</script>

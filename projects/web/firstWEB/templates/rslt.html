@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cal list</title>
+</head>
+<body>
+<button id="changeImg" onclick="changeImg()">换图片</button>
+<button id="start" onclick="start()">开始播放</button>
+{#<table border="1">#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>id</th>#}
+{#        <th>img_id</th>#}
+{#        <th>img_url</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{#    {% for img in img_list %}#}
+{#        <tr>#}
+{#            <td>{{ img.id }}</td>#}
+{#            <td>{{ img.img_id }}</td>#}
+{#            <td>{{ img.img_url }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#</table>#}
+<form action="delList" method="POST">
+    {% csrf_token %}
+        <input type="submit" value="清库">
+</form>
+{#命名为RepeatImg意味着是回放的图片#}
+<img id="Rimg" src="static/fire/">
+<script>
+    /*
+    *   写一个动态加载图片的script,
+    *   每过200ms进行图片的的刷新
+    *   进入页面的时候自动进行返回，所以可以直接进行展示信息，并且将信息存储在img_list中
+    *
+    * */
+
+</script>
+</body>
+</html>

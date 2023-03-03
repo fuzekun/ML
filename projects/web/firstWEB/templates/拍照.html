@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>摄像头拍照</title>
+    <link href="./style.css" rel="stylesheet" />
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <style>
+        .btn_1
+        {
+            background-color: blue;
+            color: white;
+            font-size: 25px;
+            width: 10%;
+            border: 0px;
+            border-radius:5px;
+        }
+    </style>
+</head>
+<body>
+<p align="center"><video id="video" width="480" height="320" controls poster="./head.jpg"></video></p>
+<div align="center">
+    <div style="display: inline" align="center"><button class="btn_1" id="capture">拍照</button></div><!--拍照并保存-->
+    <div style="display: inline" align="center" id="photo">
+
+        <input type="button" class="btn_1" @click="post()" value="上传" onClick="saveFile(filename);">
+        <a href="http://localhost:8080/user/loginByFace2">登陆</a>
+
+
+    </div>
+</div>
+
+<canvas id="canvas" width="480" height="320"></canvas>
+<script>
+    //访问用户媒体设备的兼容方法
+    function getUserMedia(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+            //最新的标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints,success, error)
+        } else if (navigator.mozGetUserMedia) {
+            //firfox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+        }
+    }
+
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+
+    function success(stream) {
+        //兼容webkit核心浏览器
+        let CompatibleURL = window.URL || window.webkitURL;
+        //将视频流设置为video元素的源
+        console.log(stream);
+
+        //video.src = CompatibleURL.createObjectURL(stream);
+        video.srcObject = stream;
+        video.play();
+    }
+
+    function error(error) {
+        console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);
+    }
+
+    if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+        //调用用户媒体设备, 访问摄像头
+        getUserMedia({video : {width: 480, height: 320}}, success, error);
+    } else {
+        alert('不支持访问用户媒体');
+    }
+
+    document.getElementById('capture').addEventListener('click', function () {
+        context.drawImage(video, 0, 0, 480, 320);
+    })
+
+    //下面的代码是保存canvas标签里的图片并且将其按一定的规则重命名
+    var type = 'jpg';
+
+    var _fixType = function(type) {
+        type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+        var r = type.match(/png|jpeg|bmp|gif/)[0];
+        return 'image/' + r;
+    };
+    /**
+     * @param  {String} filename 文件名
+     */
+    var saveFile = function(filename){
+        //获取canvas标签里的图片内容
+        var imgData = document.getElementById('canvas').toDataURL(type);
+        imgData = imgData.replace(_fixType(type),'image/octet-stream');
+
+        var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+        save_link.href = imgData;
+        save_link.download = filename;
+
+        var event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        save_link.dispatchEvent(event);
+        window.close();
+    };
+
+    // 下载后的文件名规则
+    var filename = getNowFormatDate() + '.' + type;
+
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "";
+        var month = date.getMonth() + 1<10? "0"+(date.getMonth() + 1):date.getMonth() + 1;
+        var strDate = date.getDate()<10? "0" + date.getDate():date.getDate();
+        var currentdate = date.getFullYear() + seperator1  + month  + seperator1  + strDate
+          + date.getHours()  + seperator1 + date.getMinutes()+date.getMilliseconds();
+            + seperator1 + date.getSeconds();
+        return currentdate;
+    }
+
+    window.onload = function() {
+        var vm = new Vue({
+            el: '#photo',
+
+            methods: {
+                post: function () {
+                    //发送 post 请求
+
+                    //发送文件名给“######” 发送的文件名为“filename”
+                    this.$http.post('http://localhost:8080/user/getName', {name: filename}, {emulateJSON: true}).then(function (res) {
+                        document.write(res.body);
+                    }, function (res) {
+                        console.log(res.status);
+                    });
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

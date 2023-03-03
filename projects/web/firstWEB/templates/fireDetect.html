@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>火焰检测</title>
+</head>
+<body>
+<div style="width: 600px; position: relative;">
+    <button id="capture"></button>
+    <video id="video" style="width: 600px; position: relative;">
+    </video>
+</div>
+<div id="html" style="position: absolute; top: 30px; right: 50px;">
+</div>
+
+<!--这一块是用来展示视频捕捉信息的-->
+<div style="display: none; position: relative;" id="none">
+    <canvas id="canvas" width="480" height="320">
+    </canvas>
+</div>
+
+
+{#<img id="ImagePic" alt="Base64 encoded image" width="100" height="100" />#}
+<img id="imgP" src="">
+
+<script src="{% static 'js/fireDtect.js' %}"></script>
+<script src="{% static 'jquery/jquery-3.3.1.min.js'%}"></script>
+</body>
+</html>

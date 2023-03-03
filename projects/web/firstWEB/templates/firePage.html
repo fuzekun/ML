@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>危险显示表格</title>
+</head>
+<body>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>progress</th>
+        <th>solver</th>
+        <th>type</th>
+        <th>img</th>
+    </tr>
+    </thead>
+    {% for danger in danger_list %}
+        <tr>
+            <td>{{ danger.id }}</td>
+            {% if danger.progress == "1" %}
+                <td style="color: red">等待处理</td>
+                {% else %}
+                <td style="color:green;">处理完成</td>
+            {% endif %}
+            <td>{{ danger.solver }}</td>
+            <td>{{ danger.danger_type }}</td>
+            <td>
+                <img src="{{ danger.img_name }}" height="100" width="180">
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
