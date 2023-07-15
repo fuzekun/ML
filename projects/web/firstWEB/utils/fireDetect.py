@@ -1,7 +1,9 @@
 import cv2
-
 from firstWEB.models import *
+from smoke_file_obj import *
 import os
+
+
 #进行图片的保存
 """
     1.放入f:/fire/
@@ -44,11 +46,31 @@ def label(img, ls, name): # 图，数组,路径
     # cv2.waitKey(0)
     return img
 
+# 进行
+def getSolveImg(image, name):
+    """
+    1. 首先得到图片,
+    2. 火焰检测，并返回打上标记的图片
+    3. 如果存在火焰，则保存
+    :param image: 需要处理的图片
+    :param name: 图片名称
+    :return:
+    """
+    # 1. 火焰检测
+    det = Smoke_File_Detector()
+    arr = det.detect_test([image])[0]
+    # 2. 打上标记， 有火焰进行保存
+    if (len(arr) > 0) :
+        # arr = eval(arr)
+        ret_img = label(image, arr, name)
+        return ret_img
+    return image
+
 # 进行调用进程
-def getSolveImg(img, name) : # 图片就是前端的图片， img_name是刚获取图片之后的保存路径(文件读取路径)，新的保存路径应该放在fire里面
+def getSolveImgPre(img, name) : # 图片就是前端的图片， img_name是刚获取图片之后的保存路径(文件读取路径)，新的保存路径应该放在fire里面
     # img = cv2.imread(img_name) #要么直接读取，要么经过编码,这里是直接读取
     # 想一想怎么改成相对路径
-    img_name = 'F:\\fireD\\' + str(name) + '.jpg' #读取路径
+    img_name = 'd:\\fireD\\' + str(name) + '.jpg' #读取路径
     # path = os.getcwd()
     # print("path:", path)
     # cmd = "python " + path + "\\Smoke_Fire_Detection-main\\smoke_file_obj.py --img_name " + img_name
@@ -59,7 +81,7 @@ def getSolveImg(img, name) : # 图片就是前端的图片， img_name是刚获�
     ret_back = a.read()
     # 过滤掉前面的Flusing layers...
     content = ret_back[18:]
-    print(content)
+    # print(content)
     # 转化为字典列表
     arr = eval(content)
     # print(arr)

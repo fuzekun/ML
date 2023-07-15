@@ -103,14 +103,14 @@
                  //可以将图片保存在文件中，之后前端进行获取图片就行了
                 success :function (res) {
                     //将图片的BASE64编码设置给src
-                    //alert("请求成功");
-                    //console.log(res);
+                    // alert("请求成功");
+                    // console.log(res);
                      $("#imgP").attr("src","data:image/jpg;base64,"+res);
 
                     //context.dfrawImage(video,0, 0, 480, 320);
                 },
                  error :function (error){
-                    //alert("请求失败");
+                    // alert("请求失败");
                     console.log('error', error);
                  }
             });
@@ -121,4 +121,4 @@
     function getClick() {
         capture.click();
     }
-    setInterval(getClick, 200);
+    setInterval(getClick, 10000);

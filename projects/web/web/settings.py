@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'firstWEB.apps.FirstwebConfig',
     'fireDetect.apps.FiredetectConfig',
-    # channels
+    'django_redis',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +125,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/0',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

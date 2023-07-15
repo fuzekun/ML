@@ -160,6 +160,11 @@ def recgnize(request):
     return render(request, 'recgnize.html')
 
 def getSolveImg(request):
+    """
+    :param request:
+    :return:
+    将图片进行人脸识别后保存到./firstWEB/static/img文件夹下
+    """
     #print("进入图片处理")
     #读取图片
     img = request.FILES['file']
@@ -181,7 +186,7 @@ def getSolveImg(request):
     ve.img_url = saveURL
     ve.save()
 
-    #经过编码后得到的图片
+    # 经过编码后得到的图片
     img1 = cv2.imencode('.jpg', content)[1]
     back_2 = base64.b64encode(img1)
     return HttpResponse(back_2)
@@ -204,7 +209,7 @@ def getFireImg(request):
     1. 如果有火焰，就写入数据库，所以，方法的返回值应该不仅仅是一个图片，应该返回一个原来的数组。
     2. 返回一个原来的数组之后，进行相应的图片处理，之后本系统决定是否保存图片，原图放在本系统的项目之中。
     3. 使用相对路径，不要使用绝对路径。
-    4. 测试一下速度慢是因为调用还是因为运行。
+    4. 测试一下速度慢是因为调用还是因为运行。->已经解决，没有系统调用了
 
     """
     #获取并处理成可以保存的图片
@@ -217,11 +222,6 @@ def getFireImg(request):
     #以时间为图片命名
     t = time.time()
     name = int(round(t * 1000))
-    # 想一想应该怎么改成相对路径
-    img_name='F:\\fireD\\'+str(name)+'.jpg'
-    # 保存图片
-    # print(img_name)
-    cv2.imwrite(img_name, sv)
     content = fd.getSolveImg(sv, name)
 
     #经过编码后得到的图片

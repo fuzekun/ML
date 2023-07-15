@@ -1,6 +1,8 @@
 from django.db import models
 
 
+
+
 # Create your models here.
 # 创建数据库的表
 class cal(models.Model):
